@@ -15,7 +15,7 @@ const InputGroup = styled.section`
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  padding: 1rem 0;
+  padding: 0 0 1rem;
 
   input{
     display: block;
@@ -52,13 +52,13 @@ const MemeForm = props => {
           name="topText"
           onChange={props.handleChange}
           value={props.topText}
-          placeholder="Enter Top Text"
+          placeholder="Enter First Text"
         />
         <input
           name="bottomText"
           onChange={props.handleChange}
           value={props.bottomText}
-          placeholder="Enter Bottom Text"
+          placeholder="Enter Second Text"
         />
       </InputGroup>
     </Form>

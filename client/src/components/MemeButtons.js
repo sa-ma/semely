@@ -4,6 +4,7 @@ import styled from 'styled-components';
 const ButtonArea = styled.div`
   display: flex;
   justify-content: center;
+  padding-bottom: 3rem;
 `;
 const Button = styled.button`
   font-size: 1em;
@@ -37,12 +38,23 @@ const DownloadButton = styled(Button)`
   }  
 `
 
+const Error = styled.p`
+  color: red;
+  text-align: center;
+  font-size: 1em;
+  padding: 1rem;
+`;
+
 const MemeButtons = props => {
   return (
-    <ButtonArea>
-      <GenerateButton onClick={props.handleGenerate}>Generate Image</GenerateButton>
-      <DownloadButton onClick={props.handleDownload}>Download</DownloadButton>
-    </ButtonArea>
+    <>
+      <Error>{props.error}</Error>
+
+      <ButtonArea>
+        <GenerateButton onClick={props.handleGenerate}>Generate Image</GenerateButton>
+        <DownloadButton onClick={props.handleDownload}>Download</DownloadButton>
+      </ButtonArea>
+    </>
   )
 }
 

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import LoadingOverlay from 'react-loading-overlay';
 import Meme from './Meme';
 import MemeForm from './MemeForm';
-import MemeButtons from './MemeButtons'
+import MemeButtons from './MemeButtons';
 
 
 export default class MemelyGenerator extends Component {
@@ -11,9 +12,11 @@ export default class MemelyGenerator extends Component {
     this.state = {
       topText: '',
       bottomText: '',
-      memeId: '1bij',
+      memeId: '',
       randomImg: 'http://i.imgflip.com/1bij.jpg',
-      allMemes: []
+      allMemes: [],
+      error: '',
+      loading: false
     };
   }
   handleChange = (event) => {
@@ -32,6 +35,14 @@ export default class MemelyGenerator extends Component {
   }
 
   handleDownload = (event) => {
+    if (this.state.topText === '') {
+      return this.setState({
+        error: 'First Text required'
+      })
+    }
+    this.setState({
+      loading: true
+    });
     const corsBypass = "https://cors-anywhere.herokuapp.com/";
     const postUrl = "https://api.imgflip.com/caption_image";
     axios.post(corsBypass + postUrl, null, {
@@ -47,7 +58,9 @@ export default class MemelyGenerator extends Component {
       .then(response => {
         const { url } = response.data;
         this.setState({
-          memeUrl: url
+          error: '',
+          memeUrl: url,
+          loading: false
         })
         window.open(this.state.memeUrl, '_blank');
       })
@@ -55,6 +68,9 @@ export default class MemelyGenerator extends Component {
   }
 
   componentDidMount() {
+    this.setState({
+      loading: true
+    });
     axios.get("https://api.imgflip.com/get_memes")
       .then(response => response.data)
       .then(response => {
@@ -62,17 +78,31 @@ export default class MemelyGenerator extends Component {
         this.setState({
           allMemes: memes
         });
+        this.setState({
+          loading: false,
+          memeId: this.state.allMemes[0].id,
+          randomImg: this.state.allMemes[0].url
+        });
       });
+
   }
 
   render() {
     return (
-      <>
+      <LoadingOverlay
+        active={this.state.loading}
+        spinner
+        text='Loading...'
+      >
         <MemeForm {...this.state} handleChange={this.handleChange} />
         <Meme {...this.state} />
-        <MemeButtons handleGenerate={this.handleGenerate} handleDownload={this.handleDownload} />
+        <MemeButtons
+          error={this.state.error}
+          handleGenerate={this.handleGenerate}
+          handleDownload={this.handleDownload}
+        />
 
-      </>
+      </LoadingOverlay>
     );
   }
 }

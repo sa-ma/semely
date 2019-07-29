@@ -9,7 +9,6 @@ const Footer = () => {
     text-align: center;
     width: 100%;
     font-size: 1.2em;
-    margin-top: 3rem;
   `;
   const Link = styled.a`
     color: white;
